@@ -10,6 +10,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny,IsAuthenticated
 from .serializers import UserSerializer
 from urllib.parse import unquote
+from .models import Chat
 # Create your views here.
 
 
@@ -49,15 +50,37 @@ class UserLoginAPIView(APIView):
 
 
 
+class ChatAPIView(APIView):
+    permission_classes = [IsAuthenticated] 
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        message = request.data.get("message")
+        if not message:
+            return Response({"error": "Message is required."}, status=status.HTTP_400_BAD_REQUEST)
+        if user.tokens < 100:
+            return Response({"error": "Not enough tokens."}, status=status.HTTP_400_BAD_REQUEST)
+        user.tokens -= 100
+        user.save()
+        ai_response = "This is a dummy AI response to your question."
+        chat = Chat.objects.create(
+            user=user,
+            message=message,
+            response=ai_response
+        )
+        return Response({
+            "message": "Question asked successfully.",
+            "response": ai_response,
+            "tokens_left": user.tokens,
+        }, status=status.HTTP_200_OK)
+
+
 
 def base(request):
     return render(request,'base.html')
-
 def signup(request):
     return render(request,'auth/signup.html')
 def login(request):
     return render(request,'auth/login.html')
-
 def user_logout(request):
     request.user.auth_token.delete()
     logout(request)
