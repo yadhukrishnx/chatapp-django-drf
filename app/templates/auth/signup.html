@@ -8,9 +8,7 @@
     <div class="card" style="width: 30rem;">
         <div class="card-body">
             <h2 class="card-title text-center text-info mb-4">Sign Up</h2>
-            <form method="POST">
-                {% csrf_token %}
-                
+            <form method="POST" id="signupform">
                 <!-- Username Field -->
                 <div class="mb-3">
                     <label for="id_username" class="form-label">Username</label>
@@ -29,6 +27,9 @@
                     <input type="password" name="password2" class="form-control" id="id_password2" required>
                 </div>
 
+                <div class="alert alert-info" role="alert">
+                    
+                </div>
                 <!-- Submit Button -->
                 <button type="submit" class="btn btn-info w-100">Sign Up</button>
             </form>
@@ -36,5 +37,5 @@
         </div>
     </div>
 </div>
-
+<script src="{% static 'auth/validate.js' %}"></script>
 {% endblock %}
