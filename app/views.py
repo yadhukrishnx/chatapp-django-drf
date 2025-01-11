@@ -12,7 +12,7 @@ class UserRegistrationAPIView(APIView):
         if serializer.is_valid():
             user = serializer.save()
             return Response({
-                "message" : "User Created Successfully",
+                "message" : "User Created Successfully ",
                 "user":{
                     "username":user.username,
                     "tokens":user.tokens

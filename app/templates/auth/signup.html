@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load static %}
 {% block title %}   Sign Up  {% endblock %}
 {% block nav_button %}  <a class="btn btn-outline-light" href="{% url 'login' %}">Log in</a>  {% endblock %}
 {% block content %}
@@ -9,6 +9,7 @@
         <div class="card-body">
             <h2 class="card-title text-center text-info mb-4">Sign Up</h2>
             <form method="POST" id="signupform">
+                {% csrf_token %}
                 <!-- Username Field -->
                 <div class="mb-3">
                     <label for="id_username" class="form-label">Username</label>
@@ -27,7 +28,7 @@
                     <input type="password" name="password2" class="form-control" id="id_password2" required>
                 </div>
 
-                <div class="alert alert-info" role="alert">
+                <div class="alert" role="alert" id="message">
                     
                 </div>
                 <!-- Submit Button -->
@@ -37,5 +38,9 @@
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    const loginUrl = "{% url 'login' %}";
+</script>
+
 <script src="{% static 'auth/validate.js' %}"></script>
 {% endblock %}
