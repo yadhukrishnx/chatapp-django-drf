@@ -123,3 +123,12 @@ A RESTful API system built with Django for an AI-powered chatbot. This project p
    }
 
 
+# Challenges Encountered
+- secure token-based authentication and handling login requests(Conflict between session auth and token auth).
+- Increased Time for Response through js
+
+
+# Suggestions for Improvement
+- Improve user management
+- Functionality to recharge tokens
+- Scalability
