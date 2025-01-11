@@ -19,7 +19,7 @@
                 <!-- Sign Up Button -->
                 <div class="d-flex ms-auto">
                     {% block nav_button %}
-                    <a class="btn btn-outline-light" href="{% url 'signup' %}">Sign Up</a>
+                    <a class="btn btn-outline-light" href="{% url 'tokenbalance' %}">Check Token Balance</a>
                     {% endblock %}
                 </div>
             </div>
@@ -32,7 +32,8 @@
                 <h1 class="display-4 text-info">Welcome to AI Chat App</h1>
                 <p class="lead">Get Started by signing up!</p>
                 
-                <a class="btn btn-outline-info" href="{% url 'signup' %}">Get Started</a>
+                <a class="btn btn-outline-info" href="{% url 'tokenbalance' %}">Token Balance</a>
+                <a class="btn btn-outline-primary" href="{% url 'signup' %}">Get Started</a>
             </div>
         </div>
         {% endblock %}

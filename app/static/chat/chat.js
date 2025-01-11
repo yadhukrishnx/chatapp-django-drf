@@ -1,3 +1,18 @@
+document.addEventListener("DOMContentLoaded", function () {
+    const token = document.getElementById("token").value;
+    fetch("/api/user-details/", {
+        method: "GET",
+        headers: {
+            'Authorization': 'Token ' + token,
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById("username").textContent = data.username;
+        document.getElementById("coin-count").textContent = data.tokens;
+    })
+    .catch(error => console.error("Error:", error));
+});
 
 
     document.getElementById("chat-form").addEventListener("submit", function(e) {
@@ -78,7 +93,10 @@
         })
         .then(response => response.json())
         .then(data => {
+            //  Update Coins
+            document.getElementById("token-count").textContent = data.tokens_left;
             // Handle the AI response
+
             if (data.response) {
                 appendBotReply(data.response);
             } else {

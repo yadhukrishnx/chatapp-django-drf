@@ -5,7 +5,7 @@ from django.contrib import messages
 from rest_framework.views import APIView
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import reverse
-from django.contrib.auth import authenticate,logout
+from django.contrib.auth import authenticate,logout,login
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny,IsAuthenticated
 from .serializers import UserSerializer
@@ -15,6 +15,7 @@ from .models import Chat
 
 
 class UserRegistrationAPIView(APIView):
+    permission_classes = [AllowAny]
     def post(self,request,*args,**kwargs):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
@@ -38,6 +39,7 @@ class UserLoginAPIView(APIView):
         user = authenticate(username=username, password=password)
         
         if user is not None:
+            login(request,user)
             token,created = Token.objects.get_or_create(user=user)
             chat_url = request.build_absolute_uri(reverse('chat'))
             return Response({
@@ -48,8 +50,6 @@ class UserLoginAPIView(APIView):
         else:
             return Response({"error":"Invalid credentials"},status=status.HTTP_401_UNAUTHORIZED)
 
-
-
 class ChatAPIView(APIView):
     permission_classes = [IsAuthenticated] 
     def post(self, request, *args, **kwargs):
@@ -57,7 +57,7 @@ class ChatAPIView(APIView):
         message = request.data.get("message")
         if not message:
             return Response({"error": "Message is required."}, status=status.HTTP_400_BAD_REQUEST)
-        if user.tokens < 100:
+        if user.tokens < 200:
             return Response({"error": "Not enough tokens."}, status=status.HTTP_400_BAD_REQUEST)
         user.tokens -= 100
         user.save()
@@ -73,13 +73,35 @@ class ChatAPIView(APIView):
             "tokens_left": user.tokens,
         }, status=status.HTTP_200_OK)
 
+class TokenBalanceAPIView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, *args, **kwargs):
+        token_balance = request.user.tokens
+        return Response({
+            "message": "Token balance retrieved successfully",
+            "tokens_left": token_balance
+        }, status=status.HTTP_200_OK)
+
+
+class UserDetailsAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request):
+        user = request.user
+        return Response({
+            "username": user.username,
+            "tokens": user.tokens
+        })
+
+
 
 
 def base(request):
     return render(request,'base.html')
 def signup(request):
     return render(request,'auth/signup.html')
-def login(request):
+def userlogin(request):
     return render(request,'auth/login.html')
 def user_logout(request):
     request.user.auth_token.delete()
@@ -87,10 +109,13 @@ def user_logout(request):
     messages.success(request, "You have been logged out successfully.")
     return redirect('login')
 
+def token_balance(request):
+    return render(request,'tokens.html')
 
+@login_required
 def chat(request):
-    if request.user.is_authenticated:
+    try:
         token = Token.objects.get(user=request.user).key
-        return render(request, 'home/chat.html', {'token': token,'user':request.user})
-    else:
+        return render(request, 'home/chat.html', {'token': token, 'user': request.user})
+    except Token.DoesNotExist:
         return redirect('login')

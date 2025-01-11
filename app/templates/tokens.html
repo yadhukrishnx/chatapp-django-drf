@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %} Check Token Balance {% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="height: 80vh;">
+    <div class="text-center">
+        <div class="row mb-4">
+            <div class="col">
+                <h1 class="display-4 text-info">Check Token Balance</h1>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col">
+                <input type="text" id="auth-token" placeholder="Enter your auth token" class="form-control w-auto mx-auto" />
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col">
+                <a href="{% url 'base' %}" id="check-balance" class="btn btn-outline-danger">Back</a>
+                <button id="check-balance" class="btn btn-outline-info">Check Balance</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="response" id="response"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('check-balance').addEventListener('click', () => {
+        const token = document.getElementById('auth-token').value.trim();
+
+        if (!token) {
+            document.getElementById('response').innerHTML = '<span class="error">Auth token is required!</span>';
+            return;
+        }
+
+        fetch('http://127.0.0.1:8000/api/token-balance/', {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Token ' + token
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.tokens_left !== undefined) {
+                document.getElementById('response').innerHTML = `
+                    <p><strong>Tokens Left:</strong> ${data.tokens_left}</p>
+                    <p><strong>Message:</strong> ${data.message}</p>
+                `;
+            } else {
+                document.getElementById('response').innerHTML = '<span class="error">Unexpected response from server.</span>';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('response').innerHTML = `
+                <span class="error">An error occurred: ${error.message}</span>
+            `;
+        });
+    });
+</script>
+{% endblock %}
