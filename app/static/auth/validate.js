@@ -1,3 +1,5 @@
+// Registration
+
 document.getElementById("signupform").addEventListener('submit',function(event){
     event.preventDefault();
     const username = document.getElementById('id_username').value;
@@ -70,3 +72,4 @@ document.getElementById("signupform").addEventListener('submit',function(event){
         document.getElementById('message').innerText = 'An error occurred: ' + error;
     });
 });
+

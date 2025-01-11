@@ -1,10 +1,9 @@
 from django.db import models
-
+from django.contrib.auth.models import AbstractUser
 # Create your models here.
 
-class User(models.Model):
-    username = models.CharField(max_length=50,unique=True)
-    password = models.CharField(max_length=128)
+class User(AbstractUser):
+
     tokens = models.IntegerField(default=4000)
     
     def __str__(self):
