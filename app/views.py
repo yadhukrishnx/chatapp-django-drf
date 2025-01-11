@@ -120,7 +120,8 @@ def user_logout(request):
     logout(request)
     messages.success(request, "You have been logged out successfully.")
     return redirect('login')
-
+def doc(request):
+    return render(request,'doc.html')
 def token_balance(request):
     return render(request,'tokens.html')
 

@@ -15,5 +15,6 @@ urlpatterns = [
     path('login/',views.userlogin,name="login"),
     path('logout/',views.user_logout,name="logout"),
     path('chat/',views.chat,name="chat"),
+    path('doc/',views.doc,name="doc"),
     path('tokenbalance',views.token_balance,name="tokenbalance"),
 ]

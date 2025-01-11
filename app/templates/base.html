@@ -18,8 +18,9 @@
                 
                 <!-- Sign Up Button -->
                 <div class="d-flex ms-auto ">
+                    <a class=" text-white text-decoration-none" style="margin-right: 10px; margin-top:6px;" href="{% url 'doc' %}  " >Documentation</a>
                     {% block nav_button %}
-                    <a class="btn btn-outline-dark " href="{% url 'login' %}" style="margin-right: 10px;">Log in</a> 
+                    <a class="btn btn-outline-light " href="{% url 'login' %}" style="margin-right: 10px;">Log in</a> 
                     <a class="btn btn-outline-light" href="{% url 'tokenbalance' %}">Check Token Balance</a>
                     {% endblock %}
                 </div>
