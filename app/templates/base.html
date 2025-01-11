@@ -17,8 +17,9 @@
                 <a class="navbar-brand text-white" href="{% url 'base' %}">AI Chat App</a>
                 
                 <!-- Sign Up Button -->
-                <div class="d-flex ms-auto">
+                <div class="d-flex ms-auto ">
                     {% block nav_button %}
+                    <a class="btn btn-outline-dark " href="{% url 'login' %}" style="margin-right: 10px;">Log in</a> 
                     <a class="btn btn-outline-light" href="{% url 'tokenbalance' %}">Check Token Balance</a>
                     {% endblock %}
                 </div>

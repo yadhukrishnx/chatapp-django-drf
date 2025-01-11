@@ -6,13 +6,25 @@ from rest_framework.views import APIView
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import reverse
 from django.contrib.auth import authenticate,logout,login
+from dotenv import load_dotenv
+from os import environ
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny,IsAuthenticated
 from .serializers import UserSerializer
-from urllib.parse import unquote
+import google.generativeai as genai
 from .models import Chat
 # Create your views here.
 
+
+load_dotenv()
+try:
+    geminikey = environ["geminikey"]
+except KeyError:
+    print("Error: 'TOKEN' not found in environment variables.")
+    exit(1)
+
+genai.configure(api_key="AIzaSyD8H1nRIKxy5LuAex9bw4BomxgRSlC3ii4")  # Replace with your actual API key
+aimodel = genai.GenerativeModel('gemini-1.5-flash')
 
 class UserRegistrationAPIView(APIView):
     permission_classes = [AllowAny]
@@ -61,7 +73,7 @@ class ChatAPIView(APIView):
             return Response({"error": "Not enough tokens."}, status=status.HTTP_400_BAD_REQUEST)
         user.tokens -= 100
         user.save()
-        ai_response = "This is a dummy AI response to your question."
+        ai_response = gemini_response(message,user)
         chat = Chat.objects.create(
             user=user,
             message=message,
@@ -119,3 +131,20 @@ def chat(request):
         return render(request, 'home/chat.html', {'token': token, 'user': request.user})
     except Token.DoesNotExist:
         return redirect('login')
+    
+def gemini_response(message,user):
+    greetings = ['hello', 'hi', 'hey', 'hola', 'greetings', 'what\'s up', 'yo']
+    if any(message.lower().startswith(greet) for greet in greetings):
+        message = (f'Hi there {user.username}! How can I help you?')
+        return message
+    try:
+        prompt = message
+        response = aimodel.generate_content(prompt)
+        generated_response = response.text.strip()
+        return generated_response[:350]
+    except Exception as e:
+        print(f"Error generating response: {e}")
+        
+            
+        
+            
