@@ -3,6 +3,16 @@ A RESTful API system built with Django for an AI-powered chatbot. This project p
 
 ⬇️ API Documentation
 
+# Demos
+
+
+https://github.com/user-attachments/assets/48e4c6b5-852f-494c-9e9a-a35896a37acd
+
+
+https://github.com/user-attachments/assets/a4026892-ba69-40ef-b613-734c0cc69d59
+
+
+
 
 
 ## Getting Started
