@@ -23,7 +23,7 @@ except KeyError:
     print("Error: 'TOKEN' not found in environment variables.")
     exit(1)
 
-genai.configure(api_key="AIzaSyD8H1nRIKxy5LuAex9bw4BomxgRSlC3ii4")  # Replace with your actual API key
+genai.configure(api_key=geminikey)  
 aimodel = genai.GenerativeModel('gemini-1.5-flash')
 
 class UserRegistrationAPIView(APIView):
